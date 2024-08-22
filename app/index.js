@@ -9,7 +9,7 @@ const index = () => {
   const {loading} = useQuizContext();
 
   if(loading === true){
-   return <ActivityIndicator />
+   return <View><ActivityIndicator size={'large'} /></View>
   }
   
   return (

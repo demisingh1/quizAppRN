@@ -21,7 +21,14 @@ const QuizReducer =(state, action)=>{
         return{...state , quizNumber: 0}
     }
     if(action.type === SELECT_ANS){
-        return{...state, selected_answer:action.payload}
+        const {selectedVal, correct, scores,quizNumber,} = action.payload
+        console.log("values from reducer" , selectedVal , correct);
+        
+        if(selectedVal === correct){
+            
+            return{...state, selected_answer:selectedVal, scores:scores + 1} 
+        }
+        return{...state, selected_answer:action.payload,}
     }
     if(action.type === RESET_QUIZ){
         return {...state, quizNumber:0, scores:0, selected_answer:null, quizEnd:false}

@@ -1,22 +1,28 @@
 import '../constants/app.css'
 import {  Dimensions,  StyleSheet,  Text,  TouchableOpacity,  View,} from "react-native";
 import React from "react";
+import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
 import { useQuizContext } from "../hooks/quizContext";
 import EndQuizPage from "./EndQuizPage";
 import Choises from '../components/Choises';
+import { randomOptions } from '../constants/randomOptions';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
 const quizPage = () => {
-  const { currentQuiz, nextQuiz, quizEnd,quiz,quizNumber,scores, shuffleOptions = [],trigger_ans,} = useQuizContext();
-  let correct = currentQuiz?.correct.toLowerCase().trim(" ")
-  console.log(correct, "correct anwer");
+  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER: TestIds.ADAPTIVE_BANNER;
+  ;
+  
+  const {currentQuiz, nextQuiz, quizEnd,quiz,quizNumber,scores, options,trigger_ans, selected_answer} = useQuizContext();
+  const shuffleOptions = randomOptions(options)
+
   
   if (quizEnd === true) {
     return <EndQuizPage />;
   }
   return (
     <View>
+      <BannerAd unitId={adUnitId} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
       <View style = {styles.header}>
         <Text>{quiz.length} / {quizNumber + 1}</Text>
         <Text>Score:{scores}</Text>
@@ -33,8 +39,8 @@ const quizPage = () => {
         <Text style = {styles.question}>{currentQuiz?.question}</Text>
         
           {shuffleOptions?.map((item,index)=> {
-           return <TouchableOpacity onPress={()=>trigger_ans(item)} style = {styles.options} key={index} >
-              <Choises item={item} correct ={correct}/>
+           return <TouchableOpacity disabled = {selected_answer === null ? false :true} onPress={()=>trigger_ans(item)} style = {styles.options} key={index} >
+              <Choises item={item} />
             </TouchableOpacity>
            })}
         

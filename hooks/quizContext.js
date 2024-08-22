@@ -16,16 +16,19 @@ const initialState = {
     selected_answer: null,
 }
 export const QuizProvider = ({children})=>{
-    const navigation = useNavigation()
+    // const navigation = useNavigation()
     const[state, dispatch] = useReducer(reducer, initialState)
-    const {quiz, quizNumber,quizEnd,scores,selected_answer} = state
+    const {quiz, quizNumber,quizEnd,scores,selected_answer,loading} = state
     // console.log("main quiz number" , quizNumber);
     
     const currentQuiz = quiz[quizNumber]
+    
     const options = ([currentQuiz?.ans1,currentQuiz?.ans2,currentQuiz?.ans3, currentQuiz?.correct]).flat()
-    // console.log(options);
-    const shuffleOptions = randomOptions(options)
-    // console.log(shuffleOptions)
+    // const shuffleOptions = randomOptions(options)
+    
+    // Extract the correct answer fro the quiz
+    let correct = currentQuiz?.correct.toLowerCase().trim(" ")
+    console.log(correct, "correct anwer");
 
     const getAllQuizes = async()=>{
         try {
@@ -45,7 +48,8 @@ export const QuizProvider = ({children})=>{
    
     const trigger_ans = (val)=>{
         console.log(val.toLowerCase().trim(" "))
-        dispatch({type:SELECT_ANS, payload:val.toLowerCase().trim(" ")})
+        let selectedVal = val.toLowerCase().trim(" ")
+        dispatch({type:SELECT_ANS, payload:{selectedVal, correct, scores, quizNumber, quiz}})
     }
     const reset_quiz =()=>{
         dispatch({type:RESET_QUIZ})
@@ -54,7 +58,7 @@ export const QuizProvider = ({children})=>{
         getAllQuizes()
     },[])
     return(
-        <QuizContext.Provider value={{currentQuiz,shuffleOptions,nextQuiz,quizEnd, quiz,quizNumber, scores,selected_answer,trigger_ans, reset_quiz }} >
+        <QuizContext.Provider value={{currentQuiz,options,nextQuiz,quizEnd,loading, quiz,quizNumber, scores,selected_answer,trigger_ans, reset_quiz,correct }} >
             {children}
         </QuizContext.Provider>
     )

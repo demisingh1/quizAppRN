@@ -4,8 +4,8 @@ import { useQuizContext } from '../hooks/quizContext';
 
 const height = Dimensions.get("window").height;
 const width = Dimensions.get("window").width;
-const Choises = ({item, correct}) => {
- const{selected_answer } = useQuizContext()
+const Choises = ({item}) => {
+ const{selected_answer, correct } = useQuizContext()
   return (
     <View style = {selected_answer === null ? "" : correct === item.toLowerCase().trim(" ") ? styles.right : ""}>
           <Text>
